@@ -2,9 +2,32 @@
 Files used for making predictions for baseball daily fantasy sports.
 
 **playerRoster.R**  
-  This is a file that scrapes a list of all the players currently in MLB.  
-  Unfortunately, there is no feature for Designated Hitters.  
-  It also creates the basic Player ID Key.  
+  This is a file that scrapes a list of all the players currently in MLB. 
+  Saves new and backup Player Roster.  
+	Saves new and backup Player ID Key.  
+	Output is any changes between old and new roster.  
+  Unfortunately, there is no feature for Designated Hitters. 
+
+**MLBPlayerRoster.Rds**  
+	`position`  
+	`team_abbrev`  
+	`PLAYER_NAME`  
+	`name_display_roster`  
+	`league`  
+	`sport_code`  
+	`name_display_last_first`  
+	`name_first`  
+	`position_id`  
+	`team_code`  
+	`PLAYER_ID`  
+	`name_last`  
+	`team_id`  
+	`active_sw`  
+	`team_full`  
+	`PLAYER_NAME_CLEAN`  
+
+
+
   
 **MLBPlayerIDKey.Rds**  
   `PLAYER_ID` The numeric code assined to each player by MLB.  
