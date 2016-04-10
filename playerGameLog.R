@@ -37,24 +37,30 @@ playerGameLog <- function (){
     playerJSON <- fromJSON(playerURL, nullValue = "NA")
     # Results 
     if (playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults[2]!=0){
-    playerList <- unlist(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row)
-    # Turns the list of lists into one long vector
-    # 3rd sublist under the 1st list under playerJSON$resultSets
-    columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row[[1]])
-    # Messy DF
-    playerDF <- data.frame(matrix(playerList, ncol=columns, byrow = TRUE))
-    # Unlists playerList and turn it into a matrix with 12 coulmns and stacks everything by row
-    # Column Names 
-    playerCols <- names(playerList[1:columns])
-    colnames(playerDF) <- playerCols
-    # 2rd sublist under the 1st list under playerJSON$resultSets
-#     print(x)
-    playerDF
+      playerList <- unlist(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row)
+      # Turns the list of lists into one long vector
+      # 3rd sublist under the 1st list under playerJSON$resultSets
+      if (length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row[[1]])==1){
+        columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row)
+      } else {
+        columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row[[1]])
+            }
+  #     columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row[[1]])
+      # Messy DF
+      playerDF <- data.frame(matrix(playerList, ncol=columns, byrow = TRUE))
+      # Unlists playerList and turn it into a matrix with 12 coulmns and stacks everything by row
+      # Column Names 
+      playerCols <- names(playerList[1:columns])
+      colnames(playerDF) <- playerCols
+      # 2rd sublist under the 1st list under playerJSON$resultSets
+  #     print(x)
+      playerDF
     }
   } 
   # Apply the scraping function to each of the 9 positions
   playerDF <- lapply(roster$PLAYER_ID, allPlayers)
   # Turn the list into one big dateframe
   playerDF <- playerDF[ ! sapply(playerDF, is.null) ]
-  playerDF = Reduce(function(...) merge(..., all=T), playerDF)
+  playerDF <- bind_rows(playerDF) 
+  playerDF
 }
