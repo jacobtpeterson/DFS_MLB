@@ -9,15 +9,16 @@ playerGameLog <- function (){
   # skipping it this can cuase the data to get stacked wrong when making a matrix
   
   # Global Variables
-  # year <- as.numeric(season)
-  league <- "NBA"
-  baseFileName <- "PlayerGameLog"
-  gameLogList <- list()
+  league <- "MLB"
+  baseFileName <- "GameLog"
+  fileName <- paste("./data/",league, baseFileName, ".Rds", sep = "")
+  
+  # Load full list of active players
   roster <- readRDS("MLBPlayerRoster.Rds")
   roster <- dplyr::select(roster, PLAYER_ID, PLAYER_NAME, PLAYER_NAME_CLEAN)
-  
-  # x = 502253
-  
+  # Some players are listed twice if they play multiple positions
+  roster <- unique(roster)
+
   allPlayers <- function (x){
     # Target URL
     playerURL <- paste("http://m.mlb.com/lookup/json/named.sport_hitting_game_log_composed.bam?",
@@ -41,26 +42,31 @@ playerGameLog <- function (){
       # Turns the list of lists into one long vector
       # 3rd sublist under the 1st list under playerJSON$resultSets
       if (length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row[[1]])==1){
+        # Players with only one game have a differently nested JSON
         columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row)
       } else {
         columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row[[1]])
-            }
-  #     columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row[[1]])
-      # Messy DF
+        }
       playerDF <- data.frame(matrix(playerList, ncol=columns, byrow = TRUE))
-      # Unlists playerList and turn it into a matrix with 12 coulmns and stacks everything by row
+      # Unlists playerList and turn it into a matrix with 45 coulmns and stacks everything by row
       # Column Names 
       playerCols <- names(playerList[1:columns])
       colnames(playerDF) <- playerCols
-      # 2rd sublist under the 1st list under playerJSON$resultSets
-  #     print(x)
       playerDF
     }
   } 
-  # Apply the scraping function to each of the 9 positions
+  # Apply the scraping function to the roster of active players
   playerDF <- lapply(roster$PLAYER_ID, allPlayers)
   # Turn the list into one big dateframe
   playerDF <- playerDF[ ! sapply(playerDF, is.null) ]
+  # Messy DF
   playerDF <- bind_rows(playerDF) 
-  playerDF
+  # Rename Columns
+  playerDF <- dplyr::rename(playerDF, PLAYER_ID = player_id)
+  # Tidy DF
+  # Save df as Rds
+  saveRDS(playerDF, file = fileName)
+  
+  # playerDF
 }
+
