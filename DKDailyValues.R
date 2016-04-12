@@ -15,7 +15,7 @@ DKDailyValues <- function (){
   
   today <- as.character(Sys.Date())  
   
-  todayCVS <- paste("./DK Salary Data/DKSal_", today, ".csv", sep = "" )
+  todayCVS <- paste("./DK-Salary-Data/DKSal_", today, ".csv", sep = "" )
   todayDF <- read.csv(todayCVS)
   
   # Rename columns 
