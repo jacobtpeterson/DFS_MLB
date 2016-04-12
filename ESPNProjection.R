@@ -13,14 +13,12 @@ ESPNPredictions <- function () {
   keyDF <- readRDS(keyRDS)
   keyDF <- select(keyDF, PLAYER_NAME_CLEAN, PLAYER_ID)
   
-  source("saveOut.R")
-  
   signature=function(x){
     sig=paste(sort(unlist(strsplit(tolower(x)," "))),collapse='')
     return(sig)
   }
   
-  
+  # Target Site http://games.espn.go.com/flb/tools/projections?&slotCategoryGroup=1&startIndex=0
   myDF <- do.call('rbind',lapply(paste0("http://games.espn.go.com/flb/tools/projections?&slotCategoryGroup=1&startIndex="
                   ,seq(0,1640,40)), function(x){ readHTMLTable(x, header = TRUE, 
                   as.data.frame=TRUE, stringsAsFactors=FALSE)$playertable_0}))
@@ -59,7 +57,6 @@ ESPNPredictions <- function () {
   myDF[is.na(myDF$DTD),12] <- 0
   
   # Create PLAYER_NAME_CLEAN column
-  # myDF <- left_join(gameLogDF, playerDF, by = "PLAYER_ID")
   myDF$PLAYER_NAME_CLEAN <- str_replace_all(myDF$PLAYER_NAME, "([.'-])", "")
   myDF$PLAYER_NAME_CLEAN <- str_replace_all(myDF$PLAYER_NAME_CLEAN, "([*])", "")
   myDF$PLAYER_NAME_CLEAN <- str_replace_all(myDF$PLAYER_NAME_CLEAN, "([,])", "")
@@ -85,14 +82,8 @@ ESPNPredictions <- function () {
 #   # Add Point totals for Draft Kings
 #   myDF <- mutate(myDF, DK_POINTS = PTS * 1 + FG3M * 0.5 + (REB) * 1.25 + AST * 1.5 + STL *2 + BLK * 2)
 #   
-#   # Save backup
-#   folderName <- paste(site, " Projection Data/", sep = "")
+
   rds <- paste("./data/", league, site, "Projections_",Sys.Date(), ".Rds", sep = "" )
-#   
-#   
-#   saveOut(rds)
-#   # Save df as Rds
-#   fileRDS <- paste(rds, ".Rds", sep = "" )
   
   saveRDS(myDF, file = rds)
   
