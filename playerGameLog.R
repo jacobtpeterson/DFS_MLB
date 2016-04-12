@@ -14,10 +14,11 @@ playerGameLog <- function (){
   fileName <- paste("./data/",league, baseFileName, ".Rds", sep = "")
   
   # Load full list of active players
-  roster <- readRDS("MLBPlayerRoster.Rds")
-  roster <- dplyr::select(roster, PLAYER_ID, PLAYER_NAME, PLAYER_NAME_CLEAN)
+  roster <- readRDS("MLBPlayerIDKey.Rds")
+  roster <- dplyr::select(roster, PLAYER_ID)
   # Some players are listed twice if they play multiple positions
   roster <- unique(roster)
+  roster <- filter(roster, PLAYER_ID > 0)
 
   allPlayers <- function (x){
     # Target URL
@@ -69,4 +70,3 @@ playerGameLog <- function (){
   
   # playerDF
 }
-
