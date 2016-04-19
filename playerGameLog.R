@@ -20,6 +20,8 @@ playerGameLog <- function (){
   roster <- unique(roster)
   roster <- filter(roster, PLAYER_ID > 0)
 
+  # x = 435079
+  
   allPlayers <- function (x){
     # Target URL
     playerURL <- paste("http://m.mlb.com/lookup/json/named.sport_hitting_game_log_composed.bam?",
@@ -53,6 +55,7 @@ playerGameLog <- function (){
       # Column Names 
       playerCols <- names(playerList[1:columns])
       colnames(playerDF) <- playerCols
+#       print(x)
       playerDF
     }
   } 
@@ -70,3 +73,4 @@ playerGameLog <- function (){
   
   # playerDF
 }
+
