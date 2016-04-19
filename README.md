@@ -2,14 +2,15 @@
 Files used for making predictions for baseball daily fantasy sports.
 
 **DKDailyValues.R**  
-This file takes the daily csv provided by Draftkings and cleans it up for use in the team creating algorithm.  For players listed with two possible positions, that entry is copied and listed twice, once for each position. 
+This file takes the daily csv provided by Draftkings and cleans it up for use in the team creating algorithm.  For players listed with two possible positions, that entry is copied and listed twice, once for each position.  
+
 Example:  
 
 | POS  | PLAYER_NAME |
 | ------------- | ------------- |
 | 1B/C  | John Doe  |  
 
-Becomes  
+Becomes:   
 
 | POS  | PLAYER_NAME |
 | ------------- | ------------- |
