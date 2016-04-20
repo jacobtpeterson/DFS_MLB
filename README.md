@@ -14,8 +14,8 @@ Becomes:
 
 | POS  | PLAYER_NAME |
 | ------------- | ------------- |
-| C  | John Doe  |  
 | 1B  | John Doe  |  
+| C  | John Doe  |  
 
 
 **ESPNProjections.R**  
