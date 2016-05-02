@@ -1,4 +1,4 @@
-playerRoster <- function(season = "2016") {
+playerRoster <- function(season = "2016", active = "Y") {
   # Use this code to pull client side data file from a single page
 
   # Nessasary Libraries
@@ -11,7 +11,13 @@ playerRoster <- function(season = "2016") {
   # Global Variables
   year <- as.numeric(season)
   league <- "MLB"
-  baseFile <- "PlayerRoster"
+  
+  if (active == "Y"){
+    baseFile <- "PlayerRoster"
+  } else {
+    baseFile <- "HistoricPlayerRoster"
+  }
+  
   # The MLB website has a position code for each of the 9 positions.
   # Unfortunatly, Designated Hitter isn't one of them
   position <- c(1:9)
@@ -39,7 +45,7 @@ playerRoster <- function(season = "2016") {
   allPositions <- function (x){
     # Target URL
     playerURL <- paste("http://mlb.mlb.com/lookup/json/named.search_player_all_pos",
-                       ".bam?sport_code=%27mlb%27&active_sw=%27Y%27&position=%27",
+                       ".bam?sport_code=%27mlb%27&active_sw=%27",active,"%27&position=%27",
                        x,"%27", sep = "")
       # Original Website: http://mlb.mlb.com/mlb/players/?tcid=nav_mlb_players 
       # Select "Pitcher" from "Search by Position" dropdown
@@ -60,6 +66,7 @@ playerRoster <- function(season = "2016") {
     # Column Names 
     playerCols <- names(playerList[1:columns])
     colnames(playerDF) <- playerCols
+    print(x)
       # 2rd sublist under the 1st list under playerJSON$resultSets
     playerDF
 } 
@@ -83,6 +90,7 @@ playerRoster <- function(season = "2016") {
   # Create new key from full player roster
   newKey <- select(playerDF, PLAYER_ID, PLAYER_NAME, PLAYER_NAME_CLEAN)
   newKey$SOURCE = league
+  
   # Merge the two keys
   keyDF <- full_join(keyDF, newKey)
   # Save the new key 
