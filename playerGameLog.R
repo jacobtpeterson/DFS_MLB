@@ -14,14 +14,11 @@ playerGameLog <- function (){
   fileName <- paste("./data/",league, baseFileName, ".Rds", sep = "")
   
   # Load full list of active players
-  roster <- readRDS("MLBPlayerIDKey.Rds")
+  roster <- readRDS("MLBPlayerRoster.Rds")
   roster <- dplyr::select(roster, PLAYER_ID)
   # Some players are listed twice if they play multiple positions
   roster <- unique(roster)
-  roster <- filter(roster, PLAYER_ID > 0)
-
-  # x = 435079
-  
+#   roster <- head(roster, 10)
   allPlayers <- function (x){
     # Target URL
     playerURL <- paste("http://m.mlb.com/lookup/json/named.sport_hitting_game_log_composed.bam?",
@@ -55,7 +52,6 @@ playerGameLog <- function (){
       # Column Names 
       playerCols <- names(playerList[1:columns])
       colnames(playerDF) <- playerCols
-#       print(x)
       playerDF
     }
   } 
@@ -67,6 +63,24 @@ playerGameLog <- function (){
   playerDF <- bind_rows(playerDF) 
   # Rename Columns
   playerDF <- dplyr::rename(playerDF, PLAYER_ID = player_id)
+  
+  # Columns Class
+  # charactors to factors
+  facts <- c(8,9,19,24:26,35,36,40,43)
+  playerDF[,facts]<-lapply(playerDF[,facts],factor)
+ 
+  # charactor to number
+  nums <- c(1,3,4,6,7,10,12:18,20,23,27:34,37:39,41,42,44,45)
+  playerDF[nums] <- lapply(playerDF[nums], as.numeric)
+
+  # Set proper date formats
+  playerDF$game_day <- paste(playerDF$game_day, "2016", sep = " ")
+  playerDF$game_day <- as.Date(playerDF$game_day, format = "%b %d")
+  playerDF$game_date <- as.Date(playerDF$game_date)
+  
+  # Set NAs to 0
+  playerDF[is.na(playerDF)]<-0
+  
   # Tidy DF
   # Save df as Rds
   saveRDS(playerDF, file = fileName)
