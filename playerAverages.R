@@ -3,13 +3,14 @@ playerAverages <- function () {
   library(dplyr)
   library (rowr)
   gameLogDF <- readRDS("./data/MLBGameLog.Rds")
-  # playerAves <- data.frame()
+#   playerAves <- data.frame()
   playerAves <- readRDS("./data/MLBPlayerAves.Rds")
-  
-  gameLogDF <- anti_join(gameLogDF, playerAves[,1:dim(gameLogDF)[2]])
+  newGameLogDF <- anti_join(gameLogDF, playerAves[,1:dim(gameLogDF)[2]])
   
   aves <- function (x){
-    gameDayDF <- gameLogDF[x,]
+    gameDayDF <- newCGameLogDF[x,]
+    # gameDayDF <- gameLogDF[x,]
+    
     myDF <- filter(gameLogDF, game_date < gameDayDF$game_date)
     playerDF <- filter(myDF, myDF$PLAYER_ID == gameDayDF$PLAYER_ID)
     
@@ -40,10 +41,12 @@ playerAverages <- function () {
     splitDF
   }
 
-  playerAvesNew <- lapply(c(1:dim(gameLogDF[1])), aves)
+  playerAvesNew <- lapply(c(1:dim(newGameLogDF)[1]), aves)
+  # playerAvesNew <- lapply(c(1:dim(gameLogDF)[1]), aves)
+  
   playerAvesNew <- bind_rows(playerAvesNew)
   playerAves <- rbind(playerAves, playerAvesNew)
-  saveRDS(playerAves , "./data/MLBPlayerAves.Rds")
+  saveRDS(playerAves , "./data/MLBPlayerAves02.Rds")
   # playerAves
 }
   
