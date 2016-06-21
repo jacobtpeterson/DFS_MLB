@@ -17,23 +17,85 @@ Becomes:
 | 1B  | John Doe  |  
 | C  | John Doe  |  
 
-
 **ESPNProjections.R**  
 Scrapes the projection data from the ESPN fantasy baseball site.  A new file is created each day it’s called. 
 
 **playerRoster.R**  
-  This is a file that scrapes a list of all the players currently in MLB. 
+  This is a file that scrapes a list of all the players currently in MLB.  
   Saves new and backup Player Roster.  
-	Saves new and backup Player ID Key.  
-	Output is any changes between old and new roster.  
+  Saves new and backup Player ID Key.  
+  Output is any changes between old and new roster.  
   Unfortunately, there is no feature for Designated Hitters. 
+
+**MLBGameLog.Rds**  
+	`hr`  
+	`game_type`  
+	`game_number`  
+	`sac`  
+	`game_day`  
+	`rbi`  
+	`lob`  
+	`opponent`  
+	`opponent_short`  
+	`bb`  
+	`ave`  
+	`slg`  
+	`opp_score`  
+	`ops`  
+	`hbp`  
+	`d`  
+	`team_abbrev`  
+	`so`  
+	`game_date`  
+	`sport`  
+	`sf`  
+	`game_pk`  
+	`team`  
+	`league`  
+	`h`  
+	`cs`  
+	`obp`  
+	`t`  
+	`ao`  
+	`r`  
+	`go_ao`  
+	`sb`  
+	`opponent_abbrev`  
+	`opponent_league`  
+	`PLAYER_ID`  
+	`ibb`  
+	`ab`  
+	`team_result`  
+	`opponent_id`  
+	`team_id`  
+	`home_away`  
+	`team_score`  
+	`go`  
+	
+**MLBHistoricPlayerRoster.Rds**  
+Data on every player to have played MLB.  
+Same file formate as **MLBPlayerRoster.Rds**  
+
+**MLBPlayerBios.Rds** 
+Basic biographical data on every player to have played MLB.  
+	`PLAYER_ID`  
+	`COLLEGE`  
+	`DEBUT`  
+	`LAST_GAME`  
+	`BIRTHDATE`  
+	`BIRTH_CITY`  
+	`BIRTH_STATE`  
+	`DRAFT_YEAR`  
+	`DRAFT_TEAM`  
+	`DRAFT_ROUND`  
+	`DRAFT_ROUND_OVERALL`
 
 **MLBPlayerIDKey.Rds**  
   `PLAYER_ID` The numeric code assined to each player by MLB.  
   `PLAYER_NAME` The name as listed by the data source.  
   `PLAYER_NAME_CLEAN` The name of the player cleaned up and standardized to make matching easier.  
   `SOURCE` Website were the `PLAYER_NAME` was pulled from.
-  
+
 **MLBPlayerRoster.Rds**  
 	`position`  
 	`team_abbrev`  
@@ -52,9 +114,27 @@ Scrapes the projection data from the ESPN fantasy baseball site.  A new file is 
 	`team_full`  
 	`PLAYER_NAME_CLEAN`  
 
+**dailyBuild.R**  
+Morning script used to update all the rds files with new game data.  
+Runs **playerRoster.R** to look for changes to the leuges roster.  
+Runs **playerBios.R** adding new players bio information to **MLBPlayerBios.Rds**.  
+Runs **playerGameLog.R** gathering all the gamelog information for each player.  
+Runs **playerAverages.T** calculating the rolling averages for every numeric value in **playerGameLog.R**.  
+Prints Sys.time() as a check to see how long the scipt took to run.  
 
 **fuzzyMatch.R**  
-This script is called when a name isn’t found in the MLBPlayerIDKey.Rds file.  This script needs improvement, but it should work for now.   
+This script is called when a name isn’t found in the MLBPlayerIDKey.Rds file. This script needs improvement, but it should work for now.
 
-  
+**oldPlayerAves.R**  
+
+**oldPlayerGameLog.R**
+
+**playerAverages.Rr**
+
+**playerBios.R**  
+
+**playerGameLog.R**  
+
+**playerRoster.R**  
+
 
