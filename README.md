@@ -53,6 +53,9 @@ Files used for making predictions for baseball daily fantasy sports.
 	`team_score`  
 	`go`  
 	
+**MLBHistoricPlayerRoster.Rds**  
+Data on every player to have played MLB.  
+Same file formate as **MLBPlayerRoster.Rds**  
 
 
 
