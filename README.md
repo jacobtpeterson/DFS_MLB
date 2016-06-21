@@ -28,49 +28,49 @@ Scrapes the projection data from the ESPN fantasy baseball site.  A new file is 
   Unfortunately, there is no feature for Designated Hitters. 
 
 **MLBGameLog.Rds**  
-	`hr`  
+	`hr` Home Runs  
 	`game_type`  
 	`game_number`  
-	`sac`  
+	`sac` Sacrafice Bunts  
 	`game_day`  
-	`rbi`  
-	`lob`  
+	`rbi` Runs Batted In  
+	`lob` Left on Base  
 	`opponent`  
 	`opponent_short`  
-	`bb`  
-	`ave`  
-	`slg`  
-	`opp_score`  
-	`ops`  
-	`hbp`  
-	`d`  
+	`bb` Bases on Balls  
+	`ave` Batting Average  
+	`slg` Sluggin Percentage  
+	`opp_score` Opponent Teams Score  
+	`ops` On-Base Plus Slugging  
+	`hbp` Hit by Pitch  
+	`d` Doubles  
 	`team_abbrev`  
-	`so`  
+	`so` Strike Outs  
 	`game_date`  
 	`sport`  
-	`sf`  
+	`sf` Sacrafice Flys  
 	`game_pk`  
-	`team`  
+	`team` Player's Team  
 	`league`  
-	`h`  
-	`cs`  
-	`obp`  
-	`t`  
-	`ao`  
-	`r`  
-	`go_ao`  
-	`sb`  
+	`h` Hits  
+	`cs` Caught Stealing  
+	`obp` On Base Percentage  
+	`t` Tripples  
+	`ao` Fly Outs  
+	`r` Runs  
+	`go_ao` Ground Out Fly Out Ratio  
+	`sb` Stolen Bases  
 	`opponent_abbrev`  
 	`opponent_league`  
 	`PLAYER_ID`  
-	`ibb`  
-	`ab`  
+	`ibb` Intentional Bases on Balls  
+	`ab` At Bats  
 	`team_result`  
 	`opponent_id`  
 	`team_id`  
 	`home_away`  
 	`team_score`  
-	`go`  
+	`go` Ground Outs  
 	
 **MLBHistoricPlayerRoster.Rds**  
 Data on every player to have played MLB.  
