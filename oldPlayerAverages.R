@@ -1,4 +1,4 @@
-playerAverages <- function () {
+oldPlayerAverages <- function () {
   
   library(dplyr)
   library(TTR)
@@ -7,12 +7,14 @@ playerAverages <- function () {
   
   league <- "MLB"
   baseFileName <- "GameLog"
-  saveFileName <- "PlayerAves"
-  gameLogDF <- readRDS(paste("./data/", league, baseFileName, ".Rds", sep = ""))
-  lastYear <- as.character(as.numeric(format(Sys.Date(), "%Y")) - 1)
-  oldGameLog <- readRDS(paste("./data/", league, lastYear, baseFileName, ".Rds", sep = ""))
+  gameLogs <- list.files("./data/", paste("\\d{4}", baseFileName, sep = ""))
   
-  gameLogDF <- bind_rows(gameLogDF, oldGameLog)
+  fileNames <- paste("./data/", gameLogs, sep = "")
+  
+  # fileNames <- fileNames[[1]]
+  gameLogDF <- lapply(fileNames, readRDS)
+  
+  gameLogDF <- bind_rows(gameLogDF)
   
   # Columns Class
   # charactors to factors
@@ -30,11 +32,7 @@ playerAverages <- function () {
   gameLogDF <- gameLogDF %>% group_by(PLAYER_ID, opponent) %>% arrange(game_day)%>% mutate_each_(funs(roll_meanr(.,6)), numColsOpponent)
   gameLogDF <- gameLogDF %>% group_by(PLAYER_ID, home_away) %>% arrange(game_day)%>% mutate_each_(funs(roll_meanr(.,6)), numColsHomeAway)
   
-  gameLogDF <- filter(gameLogDF, game_day > max(oldGameLog$game_date))
-  
-  saveFilePath <- paste("./data/", league, saveFileName, ".Rds", sep = "")
-  saveRDS(gameLogDF , saveFilePath)
+  saveRDS(gameLogDF , "./data/MLBOldPlayerAves.Rds")
   
   
 }
-  
