@@ -5,7 +5,7 @@ dataCleanUp <- function() {
   ## to average over.
   # NAs will be replaced by the cumulative mean. 
   
-  library(dplyr))
+  library(dplyr)
   library(RcppRoll)
   library(zoo)
   

@@ -19,6 +19,7 @@ playerBios <- function (){
   # I just like to know how many new players there are in a day
   print (delta)
   
+  myData <- data.frame()
   while (delta > 0){
   
     # I was having connection issues with this script.  
