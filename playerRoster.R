@@ -1,12 +1,12 @@
 playerRoster <- function(season = "2016", active = "Y") {
   # Use this code to pull client side data file from a single page
-
+  
   # Nessasary Libraries
   library(dplyr)
   library(stringr)
   library(RJSONIO)
-    # We use RJSONIO here becuase it can turn "NULL" into "NA" rather then 
-    # skipping it, causing the data to get stacked wrong when making a matrix
+  # We use RJSONIO here because it can turn "NULL" into "NA" rather then 
+  # skipping it, causing the data to get stacked wrong when making a matrix
   
   # Global Variables
   year <- as.numeric(season)
@@ -19,11 +19,11 @@ playerRoster <- function(season = "2016", active = "Y") {
   }
   
   # The MLB website has a position code for each of the 9 positions.
-  # Unfortunatly, Designated Hitter isn't one of them
+  # Unfortunately, Designated Hitter isn't one of them
   position <- c(1:9)
   
   # Called functions
-  # A function used to clean a player's name making matching bteen data souces easier
+  # A function used to clean a player's name making matching between data sources easier
   signature=function(x){
     sig=paste(sort(unlist(strsplit(tolower(x)," "))),collapse='')
     return(sig)
@@ -47,37 +47,37 @@ playerRoster <- function(season = "2016", active = "Y") {
     playerURL <- paste("http://mlb.mlb.com/lookup/json/named.search_player_all_pos",
                        ".bam?sport_code=%27mlb%27&active_sw=%27",active,"%27&position=%27",
                        x,"%27", sep = "")
-      # Original Website: http://mlb.mlb.com/mlb/players/?tcid=nav_mlb_players 
-      # Select "Pitcher" from "Search by Position" dropdown
-      # Click "Ctrl+Shift+I" 
-      # Click "Network"
-      # Click "Go" next to "Picher" in the browser
-      # Position = 1:9
+    # Original Website: http://mlb.mlb.com/mlb/players/?tcid=nav_mlb_players 
+    # Select "Pitcher" from "Search by Position" dropdown
+    # Click "Ctrl+Shift+I" 
+    # Click "Network"
+    # Click "Go" next to "Picher" in the browser
+    # Position = 1:9
     # JSON file from URL
     playerJSON <- fromJSON(playerURL, nullValue = "NA")
     # Results 
     playerList <- unlist(playerJSON$search_player_all_pos$queryResults$row)
-      # Turns the list of lists into one long vector
-      # 3rd sublist under the 1st list under playerJSON$resultSets
+    # Turns the list of lists into one long vector
+    # 3rd sublist under the 1st list under playerJSON$resultSets
     columns <- length(playerJSON$search_player_all_pos$queryResults$row[[1]])
     # Messy DF
     playerDF <- data.frame(matrix(playerList, ncol=columns, byrow = TRUE))
-      # Unlists playerList and turn it into a matrix with 12 coulmns and stacks everything by row
+    # Unlists playerList and turn it into a matrix with 12 columns and stacks everything by row
     # Column Names 
     playerCols <- names(playerList[1:columns])
     colnames(playerDF) <- playerCols
     print(x)
-      # 2rd sublist under the 1st list under playerJSON$resultSets
+    # 2rd sublist under the 1st list under playerJSON$resultSets
     playerDF
-} 
+  } 
   # Apply the scraping function to each of the 9 positions
   playerDF <- lapply(position, allPositions)
-  # Turn the list into one big dateframe
+  # Turn the list into one big dataframe
   playerDF = Reduce(function(...) merge(..., all=T), playerDF)
   # Rename columns 
   playerDF <- dplyr::rename(playerDF, PLAYER_NAME = name_display_first_last
-                     , PLAYER_ID = player_id)
-  # Create PLAYER_NAME_CLEAN coulmn for each dataset
+                            , PLAYER_ID = player_id)
+  # Create PLAYER_NAME_CLEAN column for each dataset
   playerDF$PLAYER_NAME_CLEAN <- str_replace_all(playerDF$PLAYER_NAME, "([.'-])", "")
   playerDF$PLAYER_NAME_CLEAN <- str_replace_all(playerDF$PLAYER_NAME_CLEAN, "([,])", "")
   playerDF$PLAYER_NAME_CLEAN <- tolower(playerDF$PLAYER_NAME_CLEAN)
@@ -97,7 +97,7 @@ playerRoster <- function(season = "2016", active = "Y") {
   saveRDS(keyDF, paste(league, "PlayerIDKey", ".Rds", sep = ""))
   # Save out new Roster file
   saveRDS(playerDF, paste(league, baseFile, ".Rds", sep = ""))
-  # Find any changes in the leagues roster from the last time this fucntion was run
+  # Find any changes in the leagues roster from the last time this function was run
   rosterUpdates <- anti_join(oldRoster, playerDF)
   updatesFileName <- paste(league, "PlayerRoster_UPDATES.Rds", sep = "")
   oldUpdates <- readRDS(updatesFileName)
@@ -105,4 +105,4 @@ playerRoster <- function(season = "2016", active = "Y") {
   saveRDS(oldUpdates, updatesFileName)
   
   rosterUpdates
-  }
+}

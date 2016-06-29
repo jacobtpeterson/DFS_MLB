@@ -1,7 +1,5 @@
 dailyBuild <- function (){
   
-  startTime <- Sys.time()
-  
   source('playerRoster.R')
   playerRoster()
   
@@ -14,7 +12,7 @@ dailyBuild <- function (){
   source("playerAverages.R")
   playerAverages()
   
-  endTime <- Sys.time()
+  source("dataCleanUp.R")
+  dataCleanUp()
   
-  endTime - startTime
 }

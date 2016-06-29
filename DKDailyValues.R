@@ -25,7 +25,6 @@ DKDailyValues <- function (){
   todayDF$TEAM <- toupper(todayDF$TEAM)
   
   # Create PLAYER_NAME_CLEAN column
-  # dkDataDF <- left_join(gameLogDF, playerDF, by = "PLAYER_ID")
   todayDF$PLAYER_NAME_CLEAN <- str_replace_all(todayDF$PLAYER_NAME, "([.'-])", "")
   todayDF$PLAYER_NAME_CLEAN <- str_replace_all(todayDF$PLAYER_NAME_CLEAN, "([,])", "")
   todayDF$PLAYER_NAME_CLEAN <- tolower(todayDF$PLAYER_NAME_CLEAN)
@@ -42,16 +41,23 @@ DKDailyValues <- function (){
     keyDF <- select(keyDF,PLAYER_NAME_CLEAN, PLAYER_ID)
   }
   
+  # Add PLAYER_ID information to today's data
   todayDF <- left_join(todayDF, keyDF, by = "PLAYER_NAME_CLEAN")
   
-  # rds <- "NBATodaysData"
-  fileRDS <- paste("./DK Salary Data/DKSal", today, ".Rds", sep = "" )
-  # saveOut(rds)
-  # fileRDS <- paste(rds, ".Rds", sep = "" )
+  
+  # Split players with 2 positions into one row per position. 
+  twoPOS <- todayDF[ str_detect(todayDF$POS, "\\/"),]
+  firstPOS <- twoPOS
+  firstPOS$POS <- str_replace(firstPOS$POS, "\\/.*$", "")
+  secondPOS <- twoPOS
+  secondPOS$POS <- str_replace(secondPOS$POS, "^.*\\/", "")
+  todayDF <- anti_join(todayDF, twoPOS)
+  todayDF <- rbind(todayDF, firstPOS, secondPOS)
+  
+  
+  # Save out the updated Draftkings file. 
+  fileRDS <- paste("./DK-Salary-Data/DKSal_", today, ".Rds", sep = "" )
   saveRDS(todayDF, file = fileRDS)
-  
-  
-  todayDF
   
 }
     

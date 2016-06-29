@@ -13,20 +13,23 @@ playerBios <- function (){
   # Some players are listed twice if they play multiple positions
   roster <- unique(roster)
   roster <- dplyr::filter(roster, PLAYER_ID > 0)
-  
+  # Find players with missing bio information
   roster <- anti_join(roster, playerBioDF, by = "PLAYER_ID")
   delta <- length(roster$PLAYER_ID)
+  # I just like to know how many new players there are in a day
   print (delta)
   
   while (delta > 0){
   
-    # Compare player bio and roster to see who still needs bio info
-    # roster <- anti_join(roster, playerBioDF, by = "PLAYER_ID")
+    # I was having connection issues with this script.  
+    # Anytime I ran too many players at a time, I would fail to connect and the 
+    # # script would fail. 
+    # This is now made to run for 100 players at a time and then save.
+    # It should only be a problem at the beginning of the year or the first time
+    # # the script's run.
     
     rosterHead <- head(roster, 100)
-  
-  #   x <- 452240
-  #   x <- 123559
+    
     bios <- function (x){
       url <- paste ("http://m.mlb.com/player/",x, sep = "")
       url_content <- read_html(url)
@@ -77,13 +80,12 @@ playerBios <- function (){
       playerDF
       }
     
-    
+    # Apply the function bios() to the list of player Ids. 
     myData <- lapply(rosterHead$PLAYER_ID, bios)
     myData <- myData[ ! sapply(myData, is.null) ]
     
     # Messy DF
     myData <- bind_rows(myData)
-    
     
     # Column names
     playerCols <- c("PLAYER_ID","born", "draft", "COLLEGE", "DEBUT", "LAST_GAME")
@@ -121,12 +123,11 @@ playerBios <- function (){
     myData$DEBUT <- as.Date(myData$DEBUT, format = "%B%d,%Y")
     myData$LAST_GAME <- as.Date(myData$LAST_GAME, format = "%m/%d/%Y")
     
-    # Remove born and draft
+    # Remove now redundant born and draft
     myData <- dplyr::select(myData, -born, -draft)
     
     # Bind old player bio info to new player bio info
     myData <- rbind(playerBioDF, myData)
-      
       
     saveRDS(myData, "MLBPlayerBios.Rds")
     print(length(myData$PLAYER_ID))

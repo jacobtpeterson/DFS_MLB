@@ -75,13 +75,6 @@ ESPNPredictions <- function () {
   }
   
   myDF <- left_join(myDF, keyDF)
-#   
-#   # Fix column names
-#   names(myDF)[5] <- "FG3M"
-#   
-#   # Add Point totals for Draft Kings
-#   myDF <- mutate(myDF, DK_POINTS = PTS * 1 + FG3M * 0.5 + (REB) * 1.25 + AST * 1.5 + STL *2 + BLK * 2)
-#   
 
   rds <- paste("./data/", league, site, "Projections_",Sys.Date(), ".Rds", sep = "" )
   

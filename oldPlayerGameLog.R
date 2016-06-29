@@ -1,12 +1,12 @@
 oldPlayerGameLog <- function (season = "2015"){
   # Use this code to pull client side data file from multiple pages
   
-  # Nessasary Libraries
+  # Necessary Libraries
   library(RJSONIO)
   library(reshape)
   library(dplyr)
   # We use RJSONIO here becuase it can turn "NULL" into "NA" rather then 
-  # skipping it this can cuase the data to get stacked wrong when making a matrix
+  # skipping it this can cause the data to get stacked wrong when making a matrix
   
   # Global Variables
   league <- "MLB"
@@ -21,7 +21,7 @@ oldPlayerGameLog <- function (season = "2015"){
   roster <- dplyr::select(roster, PLAYER_ID)
   # Some players are listed twice if they play multiple positions
   roster <- unique(roster)
-#   roster <- head(roster, 10)
+  # roster <- head(roster, 10) # Use for debugging
   allPlayers <- function (x){
     # Target URL
     playerURL <- paste("http://m.mlb.com/lookup/json/named.sport_hitting_game_log_composed.bam?",
@@ -49,9 +49,9 @@ oldPlayerGameLog <- function (season = "2015"){
         columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row)
       } else {
         columns <- length(playerJSON$sport_hitting_game_log_composed$sport_hitting_game_log$queryResults$row[[1]])
-        }
+      }
       playerDF <- data.frame(matrix(playerList, ncol=columns, byrow = TRUE))
-      # Unlists playerList and turn it into a matrix with 45 coulmns and stacks everything by row
+      # Unlists playerList and turn it into a matrix with 45 columns and stacks everything by row
       # Column Names 
       playerCols <- names(playerList[1:columns])
       colnames(playerDF) <- playerCols
@@ -60,7 +60,7 @@ oldPlayerGameLog <- function (season = "2015"){
   } 
   # Apply the scraping function to the roster of active players
   playerDF <- lapply(roster$PLAYER_ID, allPlayers)
-  # Turn the list into one big dateframe
+  # Turn the list into one big dataframe
   playerDF <- playerDF[ ! sapply(playerDF, is.null) ]
   # Messy DF
   playerDF <- bind_rows(playerDF) 
@@ -68,14 +68,14 @@ oldPlayerGameLog <- function (season = "2015"){
   playerDF <- dplyr::rename(playerDF, PLAYER_ID = player_id)
   
   # Columns Class
-  # charactors to factors
+  # Characters to factors
   facts <- c(3,8,9,19,24:26,35,36,37,40,41,42,43)
   playerDF[,facts]<-lapply(playerDF[,facts],factor)
- 
-  # charactor to number
+  
+  # Characters to number
   nums <- c(1,4,6,7,10,12:18,20,23,27:34,38,39,44,45)
   playerDF[nums] <- lapply(playerDF[nums], as.numeric)
-
+  
   # Set proper date formats
   playerDF$game_day <- paste(playerDF$game_day, "2016", sep = " ")
   playerDF$game_day <- as.Date(playerDF$game_day, format = "%b %d")
@@ -87,7 +87,4 @@ oldPlayerGameLog <- function (season = "2015"){
   # Tidy DF
   # Save df as Rds
   saveRDS(playerDF, file = fileName)
-  
-  # playerDF
 }
-
